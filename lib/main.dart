@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as c;
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'detail_screen.dart';
@@ -11,11 +11,11 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return c.GetMaterialApp(
       initialRoute: '/',
       getPages: [
-        GetPage(name: '/', page: () => HomeScreen()),
-        GetPage(name: '/details', page: () => DetailsScreen())
+        c.GetPage(name: '/', page: () => HomeScreen()),
+        c.GetPage(name: '/details', page: () => DetailsScreen())
       ],
       title: 'Responsive Complex Design',
       builder: (context, widget) => ResponsiveBreakpoints.builder(
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
 
           const Breakpoint(start: 0, end: 450, name: MOBILE),
           const Breakpoint(start: 451, end: 800, name: TABLET),
-          const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+          const Breakpoint(start: 801, end: 1500, name: DESKTOP),
           const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
         ],
         child: widget!,
@@ -50,6 +50,62 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Responsive Complex Design'),
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            // Drawer Header
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            // Menu Items
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                // Navigate to Home Screen
+                // Optionally add your navigation code here
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                // Navigate to Settings Screen
+                // Optionally add your navigation code here
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('About'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                // Navigate to About Screen
+                // Optionally add your navigation code here
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                // Handle logout logic
+              },
+            ),
+          ],
+        ),
+      ),
       body: ResponsiveGrid(),
     );
   }
@@ -61,16 +117,58 @@ class ResponsiveGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Determine the number of columns based on the screen size
-    int columns = ResponsiveBreakpoints.of(context).isMobile ? 2 : 6;
+
+    //crossAxisCount
+    double responsive = ResponsiveValue(
+      context,
+      defaultValue: 2.0,
+      conditionalValues: [
+        Condition.smallerThan(name: MOBILE, value: 1.0), // Padding for mobile
+        Condition.largerThan(name: MOBILE, value: 2.0), // Padding for mobile
+        Condition.largerThan(name: TABLET, value: 4.0), // Padding for tablet
+        Condition.largerThan(name: DESKTOP, value: 8.0), // Padding for desktop
+      ],
+    ).value;
+
+    //crossAxisSpacing
+    double crossAxisS = ResponsiveValue(
+      context,
+      defaultValue: 10.0,
+      conditionalValues: [
+        Condition.largerThan(name: MOBILE, value: 10.0), // Padding for mobile
+        Condition.largerThan(name: TABLET, value: 15.0), // Padding for tablet
+        Condition.largerThan(name: DESKTOP, value: 13.0), // Padding for desktop
+      ],
+    ).value; //mainAxisSpacing
+    double mainAxisS = ResponsiveValue(
+      context,
+      defaultValue: 10.0,
+      conditionalValues: [
+        Condition.largerThan(name: MOBILE, value: 10.0), // Padding for mobile
+        Condition.largerThan(name: TABLET, value: 10.0), // Padding for tablet
+        Condition.largerThan(name: DESKTOP, value: 13.0), // Padding for desktop
+      ],
+    ).value;
+
+    //childAspectRatio
+    double aspectRatio = ResponsiveValue(
+      context,
+      defaultValue: 1.0,
+      conditionalValues: [
+        Condition.largerThan(name: MOBILE, value: 1.0), // Padding for mobile
+        Condition.largerThan(name: TABLET, value: 0.8), // Padding for tablet
+        Condition.largerThan(name: DESKTOP, value: 1.0), // Padding for desktop
+      ],
+    ).value;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: columns,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: 1.0,
+          crossAxisCount: responsive.toInt(),
+          crossAxisSpacing: crossAxisS,
+          mainAxisSpacing: mainAxisS,
+          childAspectRatio: aspectRatio,
         ),
         itemCount: items.length,
         itemBuilder: (context, index) {
@@ -118,7 +216,7 @@ class ResponsiveCard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
-                Get.toNamed('/details', arguments: '$item button pressed!');
+                c.Get.toNamed('/details', arguments: '$item button pressed!');
                 // Action on button press
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('$item button pressed!')),
