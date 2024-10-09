@@ -46,67 +46,128 @@ class MyApp extends StatelessWidget {
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    bool isMobile = ResponsiveBreakpoints.of(context).isMobile;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Responsive Complex Design'),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            // Drawer Header
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
+      drawer: isMobile
+          ? Drawer(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  // Drawer Header
+                  DrawerHeader(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                    ),
+                    child: Text(
+                      'Menu',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                      ),
+                    ),
+                  ),
+                  // Menu Items
+                  ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text('Home'),
+                    onTap: () {
+                      Navigator.pop(context); // Close the drawer
+                      // Navigate to Home Screen
+                      // Optionally add your navigation code here
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text('Settings'),
+                    onTap: () {
+                      Navigator.pop(context); // Close the drawer
+                      // Navigate to Settings Screen
+                      // Optionally add your navigation code here
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.info),
+                    title: Text('About'),
+                    onTap: () {
+                      Navigator.pop(context); // Close the drawer
+                      // Navigate to About Screen
+                      // Optionally add your navigation code here
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.logout),
+                    title: Text('Logout'),
+                    onTap: () {
+                      Navigator.pop(context); // Close the drawer
+                      // Handle logout logic
+                    },
+                  ),
+                ],
               ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
+            )
+          : null,
+      body: Row(
+        children: [
+          if (!isMobile)
+            Container(
+              width: 250, // Fixed width for the side panel
+              color: Colors.grey[200], // Background color for the side panel
+              child: _buildSidePanel(context), // Content for the side panel
             ),
-            // Menu Items
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                // Navigate to Home Screen
-                // Optionally add your navigation code here
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                // Navigate to Settings Screen
-                // Optionally add your navigation code here
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.info),
-              title: Text('About'),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                // Navigate to About Screen
-                // Optionally add your navigation code here
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                // Handle logout logic
-              },
-            ),
-          ],
-        ),
+          Expanded(child: ResponsiveGrid())
+        ],
       ),
-      body: ResponsiveGrid(),
+    );
+  }
+
+  // Side panel content for desktop/tablet screens
+  Widget _buildSidePanel(BuildContext context) {
+    return Column(
+      children: [
+        // Optional header for the side panel
+        Container(
+          color: Colors.blue,
+          height: 80,
+          child: Center(
+            child: Text(
+              'Side Panel',
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            ),
+          ),
+        ),
+        // List of menu options in the side panel
+        Expanded(
+          child: ListView(
+            children: [
+              ListTile(
+                leading: Icon(Icons.home),
+                title: Text('Home'),
+                onTap: () {
+                  // Handle navigation
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('Settings'),
+                onTap: () {
+                  // Handle navigation
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.info),
+                title: Text('About'),
+                onTap: () {
+                  // Handle navigation
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -165,11 +226,11 @@ class ResponsiveGrid extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: responsive.toInt(),
-          crossAxisSpacing: crossAxisS,
-          mainAxisSpacing: mainAxisS,
-          childAspectRatio: aspectRatio,
-        ),
+            crossAxisCount: responsive.toInt(),
+            crossAxisSpacing: crossAxisS,
+            mainAxisSpacing: mainAxisS,
+            childAspectRatio: aspectRatio,
+            mainAxisExtent: 200),
         itemCount: items.length,
         itemBuilder: (context, index) {
           return ResponsiveCard(item: items[index]);
