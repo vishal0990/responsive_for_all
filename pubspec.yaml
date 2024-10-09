@@ -32,6 +32,8 @@ dependencies:
     sdk: flutter
   responsive_framework: ^1.5.1
   get: ^4.6.5
+  image_picker: ^0.8.5+3
+  file_picker: ^8.1.2
 
 
 
