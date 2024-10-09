@@ -32,6 +32,8 @@ dependencies:
     sdk: flutter
   responsive_framework: ^1.5.1
   get: ^4.6.5
+  video_player: ^2.5.1
+  chewie: ^1.2.2
 
 
 
