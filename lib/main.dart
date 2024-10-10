@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as c;
+import 'package:responsive_for_all/image_selected.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'detail_screen.dart';
@@ -15,7 +16,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       getPages: [
         c.GetPage(name: '/', page: () => HomeScreen()),
-        c.GetPage(name: '/details', page: () => DetailsScreen())
+        c.GetPage(name: '/details', page: () => DetailsScreen()),
+        c.GetPage(name: '/image', page: () => ImageSelected())
       ],
       title: 'Responsive Complex Design',
       builder: (context, widget) => ResponsiveBreakpoints.builder(
@@ -184,8 +186,7 @@ class ResponsiveGrid extends StatelessWidget {
       context,
       defaultValue: 2.0,
       conditionalValues: [
-        Condition.smallerThan(name: MOBILE, value: 1.0), // Padding for mobile
-        Condition.largerThan(name: MOBILE, value: 2.0), // Padding for mobile
+        Condition.smallerThan(name: MOBILE, value: 3.0), // Padding for mobile
         Condition.largerThan(name: TABLET, value: 4.0), // Padding for tablet
         Condition.largerThan(name: DESKTOP, value: 8.0), // Padding for desktop
       ],
@@ -197,8 +198,8 @@ class ResponsiveGrid extends StatelessWidget {
       defaultValue: 10.0,
       conditionalValues: [
         Condition.largerThan(name: MOBILE, value: 10.0), // Padding for mobile
-        Condition.largerThan(name: TABLET, value: 15.0), // Padding for tablet
-        Condition.largerThan(name: DESKTOP, value: 13.0), // Padding for desktop
+        Condition.largerThan(name: TABLET, value: 12.0), // Padding for tablet
+        Condition.largerThan(name: DESKTOP, value: 14.0), // Padding for desktop
       ],
     ).value; //mainAxisSpacing
     double mainAxisS = ResponsiveValue(
@@ -206,8 +207,8 @@ class ResponsiveGrid extends StatelessWidget {
       defaultValue: 10.0,
       conditionalValues: [
         Condition.largerThan(name: MOBILE, value: 10.0), // Padding for mobile
-        Condition.largerThan(name: TABLET, value: 10.0), // Padding for tablet
-        Condition.largerThan(name: DESKTOP, value: 13.0), // Padding for desktop
+        Condition.largerThan(name: TABLET, value: 12.0), // Padding for tablet
+        Condition.largerThan(name: DESKTOP, value: 14.0), // Padding for desktop
       ],
     ).value;
 
@@ -230,7 +231,7 @@ class ResponsiveGrid extends StatelessWidget {
             crossAxisSpacing: crossAxisS,
             mainAxisSpacing: mainAxisS,
             childAspectRatio: aspectRatio,
-            mainAxisExtent: 200),
+            mainAxisExtent: 180),
         itemCount: items.length,
         itemBuilder: (context, index) {
           return ResponsiveCard(item: items[index]);
@@ -247,6 +248,16 @@ class ResponsiveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //responsiveSize
+    double responsiveSize = ResponsiveValue(
+      context,
+      defaultValue: 12.0,
+      conditionalValues: [
+        Condition.largerThan(name: MOBILE, value: 12.0), // Padding for mobile
+        Condition.largerThan(name: TABLET, value: 15.0), // Padding for tablet
+        Condition.largerThan(name: DESKTOP, value: 18.0), // Padding for desktop
+      ],
+    ).value;
     return Card(
       elevation: 4.0,
       child: Column(
@@ -261,7 +272,8 @@ class ResponsiveCard extends StatelessWidget {
               child: Center(
                 child: Text(
                   item,
-                  style: TextStyle(color: Colors.white, fontSize: 24),
+                  style:
+                      TextStyle(color: Colors.white, fontSize: responsiveSize),
                 ),
               ),
             ),
@@ -270,20 +282,23 @@ class ResponsiveCard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Description of $item',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: responsiveSize),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
-                c.Get.toNamed('/details', arguments: '$item button pressed!');
+                c.Get.toNamed('/image', arguments: '$item button pressed!');
                 // Action on button press
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('$item button pressed!')),
                 );
               },
-              child: Text('Action'),
+              child: Text(
+                'Action',
+                style: TextStyle(fontSize: responsiveSize),
+              ),
             ),
           ),
         ],
